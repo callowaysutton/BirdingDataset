@@ -1,0 +1,20 @@
+.bg-light {
+    border-radius: 32px;
+}
+
+.alert {
+    border-radius: 32px;
+    margin: 20px 200px auto 200px;
+}
+
+.navbar-nav.ml-auto {
+    margin-left: auto;
+}
+
+.col-md-6 {
+    margin-bottom: 25px;
+}
+
+.py-3 {
+    border-radius: 64px;
+}

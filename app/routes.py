@@ -1,12 +1,14 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, session, request
 from flask_login import login_user, current_user, login_required, logout_user
+from flask_paginate import Pagination, get_page_args
 from app import app, db
-from app.models import User, Link
-from app.forms import RegistrationForm, LoginForm, LinkForm
+from app.models import User, Link, Bird, BirdVote
+from app.forms import RegistrationForm, LoginForm, LinkForm, BirdUploadForm, BirdValidationForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from libgravatar import Gravatar
 from sqlalchemy import func
 import subprocess
+import random
 
 # Get the current version
 git_command = ["git", "rev-parse", "--short", "HEAD"]
@@ -37,19 +39,23 @@ except Exception as e:
 @app.route("/")
 def home():
     return render_template(
-        "home.jinja",
+        "home.html",
         user=current_user,
         version=version,
-        user_count=db.session.query(func.count()).select_from(User).scalar(),
-        total_visits=db.session.query(func.count()).select_from(User).scalar(),
-        visits_day=db.session.query(func.count()).select_from(User).scalar(),
-        total_links=db.session.query(func.count()).select_from(Link).scalar(),
+    )
+
+@app.route("/terms")
+def tos():
+    return render_template(
+        "tos.html",
+        user=current_user,
+        version=version,
     )
 
 
 @app.route("/about")
 def about():
-    return render_template("about.jinja", user=current_user, version=version)
+    return render_template("about.html", user=current_user, version=version)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -72,15 +78,16 @@ def register():
             password=hashed_password,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-            organization=form.organization.data,
+            # organization=form.organization.data,
             profile_picture=Gravatar(form.email.data).get_image(),
             # phone_number=form.phone_number.data,
             email=form.email.data,
-            location=form.location.data,
+            # location=form.location.data,
             # website=form.website.data,
             # interests=form.interests.data,
             # bio=form.bio.data
         )
+        
 
         # Add the new user to the database
         try:
@@ -99,7 +106,7 @@ def register():
     # else:
     #     flash('Username taken or passwords did not match!', 'danger')
     return render_template(
-        "register.jinja", title="Register", form=form, version=version
+        "register.html", title="Register", form=form, version=version, user=current_user
     )
 
 
@@ -126,8 +133,96 @@ def login():
             )
 
     return render_template(
-        "login.jinja", title="Login", form=form, user=current_user, version=version
+        "login.html", title="Login", form=form, user=current_user, version=version
     )
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+@login_required  # Make sure the user is logged in to access this page
+def upload_bird():
+    form = BirdUploadForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            # picture_url = save_picture(form.picture.data)
+            picture_url = ''  # Set a default image URL if no image is uploaded
+            print("Saved picture!")
+        else:
+            picture_url = ''  # Set a default image URL if no image is uploaded
+
+        bird = Bird(name=form.name.data,
+                    description=form.description.data,
+                    picture_reference=picture_url,
+                    latitude=form.latitude.data,
+                    longitude=form.longitude.data,
+                    user=current_user)
+
+        db.session.add(bird)
+        db.session.commit()
+
+        flash('Your bird has been uploaded!', 'success')
+        return redirect(url_for('home'))  # Redirect to the home page or a success page
+
+    return render_template('upload.html', form=form, user=current_user, version=version)
+
+
+@app.route('/validate', methods=['GET', 'POST'])
+@login_required
+def validate_bird():
+    form = BirdValidationForm()
+
+    # Check if a bird ID is stored in the user's session
+    bird_id = session.get('bird_to_validate_id')
+
+    if form.validate_on_submit():
+        if bird_id is not None:
+            bird_to_validate = Bird.query.get(bird_id)
+
+            # Determine whether the rating is positive or negative
+            if form.rating.data > 5:
+                bird_to_validate.positive_votes += 1
+            else:
+                bird_to_validate.negative_votes += 1
+
+            # Create a new BirdVote entry for validation
+            bird_vote = BirdVote(
+                bird=bird_to_validate,
+                user=current_user,
+                rating=form.rating.data,
+                description=form.description.data
+            )
+
+            db.session.add(bird_vote)
+            db.session.commit()
+
+            flash('Thank you for your validation!', 'success')
+            return redirect(url_for('home'))
+
+    # Fetch a randomly selected bird for validation and store its ID in the session
+    bird_to_validate = random.choice(Bird.query.all())
+    session['bird_to_validate_id'] = bird_to_validate.id
+
+    return render_template('validate.html', form=form, bird_to_validate=bird_to_validate, user=current_user, version=version)
+
+@app.route('/explore', methods=['GET'])
+def explore_birds():
+    # Get a list of all birds from the database
+    all_birds = Bird.query.all()
+
+    # Pagination setup
+    page = request.args.get('page', type=int, default=1)
+    per_page = 20
+    start = (page - 1) * per_page
+    end = start + per_page
+    birds_to_display = all_birds[start:end]
+
+    pagination = Pagination(
+        page=page,
+        per_page=per_page,
+        total=len(all_birds),
+        css_framework='bootstrap',
+    )
+
+    return render_template('explore.html', birds=birds_to_display, pagination=pagination, user=current_user, version=version)
 
 
 @app.route("/logout")
@@ -142,7 +237,7 @@ def logout():
 @login_required
 def dashboard():
     return render_template(
-        "dashboard/dashboard.jinja", user=current_user, version=version
+        "dashboard/dashboard.html", user=current_user, version=version
     )
 
 
@@ -150,7 +245,7 @@ def dashboard():
 @login_required
 def create_new():
     return render_template(
-        "dashboard/create_new.jinja", user=current_user, version=version, form=LinkForm()
+        "dashboard/create_new.html", user=current_user, version=version, form=LinkForm()
     )
 
 
@@ -158,7 +253,7 @@ def create_new():
 @login_required
 def link_analytics():
     return render_template(
-        "dashboard/link_analytics.jinja", user=current_user, version=version
+        "dashboard/link_analytics.html", user=current_user, version=version
     )
 
 
@@ -166,11 +261,11 @@ def link_analytics():
 @login_required
 def export_link_data():
     return render_template(
-        "dashboard/export_link_data.jinja", user=current_user, version=version
+        "dashboard/export_link_data.html", user=current_user, version=version
     )
 
 
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.jinja", user=current_user, version=version)
+    return render_template("profile.html", user=current_user, version=version)

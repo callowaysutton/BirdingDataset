@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <!-- Bird Submission Form -->
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <fieldset class="border rounded p-4">
+                    <legend class="border-bottom pb-2 mb-4">
+                        <h1 class="mb-0">Submit a Bird</h1>
+                    </legend>
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.picture.label(class="form-label") }}
+                        {{ form.picture(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        <div id="map" style="height: 300px;"></div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.latitude.label(class="form-label") }}
+                        {{ form.latitude(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.longitude.label(class="form-label") }}
+                        {{ form.longitude(class="form-control") }}
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </fieldset>
+            </form>
+
+<!-- Include Leaflet JS and CSS for map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Include any other necessary Leaflet plugins or scripts here -->
+<script>
+  var map = L.map('map').setView([39, -86], 5);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Add a marker layer for user interaction
+  var marker = L.marker([39, -86], { draggable: true }).addTo(map);
+
+  // Update latitude and longitude fields when the map is clicked
+  map.on('click', function(e) {
+    var latlng = e.latlng;
+    marker.setLatLng(latlng);
+    document.getElementById('latitude').value = latlng.lat;
+    document.getElementById('longitude').value = latlng.lng;
+  });
+
+  // Initialize the marker at the map center
+  var initialLat = 39; // Initial latitude
+  var initialLng = -87; // Initial longitude
+  var initialLatLng = L.latLng(initialLat, initialLng);
+  marker.setLatLng(initialLatLng);
+  document.getElementById('latitude').value = initialLat;
+  document.getElementById('longitude').value = initialLng;
+</script>
+
+{% endblock %}

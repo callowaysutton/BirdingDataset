@@ -20,7 +20,11 @@ class User(db.Model, UserMixin):
     profile_picture = db.Column(db.String(256), nullable=False, default="")
     date_registered = db.Column(db.DateTime, default=datetime.utcnow)
 
-    links = db.relationship('Link', backref='user', lazy=True)
+    # Birds submitted by the user
+    birds = db.relationship('Bird', backref='user', lazy=True)
+    
+    # Votes submitted by the user
+    votes = db.relationship('BirdVote', backref='user', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.date_registered}')"
@@ -28,6 +32,55 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return str(self.id)
     
+class Bird(db.Model):
+    __tablename__ = "bird"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, unique=False, nullable=False)
+    picture_reference = db.Column(db.Text, unique=False, nullable=False)
+    description = db.Column(db.Integer())
+    # Geolocation data
+    latitude = db.Column(db.Float(), unique=False, nullable=False)
+    longitude = db.Column(db.Float(), unique=False, nullable=False)
+    
+    positive_votes = db.Column(db.Integer(), default=0)
+    negative_votes = db.Column(db.Integer(), default=0)
+    
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    votes = db.relationship('BirdVote', backref='bird', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    def __repr__(self):
+        return f"Bird('{self.name}', '{self.description}')"
+
+    def get_id(self):
+        return str(self.id)
+
+class BirdVote(db.Model):
+    __tablename__ = "birdvotes"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Implement a unique constraint on bird_id and user_id
+    # to prevent duplicate votes
+    
+    # Bird ID which relates back to the original bird
+    bird_id = db.Column(db.Integer, db.ForeignKey('bird.id'), nullable=False)
+    # User ID which relates back to the voting user
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    # Actual vote data
+    rating = db.Column(db.Integer(), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"BirdVote('{self.bird_id}', '{self.vote}')"
+
+    def get_id(self):
+        return str(self.id)
+
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     link = db.Column(db.String(1024), unique=True, nullable=False)

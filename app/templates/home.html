@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="bg-light py-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <h1>Welcome to the Birding Dataset</h1>
+                    <p>Explore and contribute to our collection of bird photos, descriptions, and locations. Share your birding experiences with the community, discover information about different bird species, and help researchers study and protect bird populations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="alert alert-success text-center" role="alert">
+        Download the entire Birding Dataset and explore our extensive collection of bird data <a href="/explore" class="alert-link">here</a>.
+    </div>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <h2>Submit Your Bird Sightings</h2>
+                    <p>Please consider sharing your birdwatching encounters with the community by uploading photos along with descriptions and location information of your bird sightings. Your contributions play a significant role in expanding our dataset, thereby assisting fellow enthusiasts in identifying local bird species. When you submit your photos, you also become part of our esteemed group of contributors who have built up the Birding Dataset, and you may even receive additional recognition by verifying submissions from other members!</p>
+                    <a href="/submit" class="btn btn-primary">Submit a Photo</a>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='img/bird.jpg')}}" alt="Bird Sighting" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light py-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <h2>Explore the Dataset</h2>
+                    <p>Discover information about different bird species in your region. Our extensive collection of bird profiles provides detailed insights into their behavior, habitat, and more. Explore and learn about the fascinating world of birds.</p>
+                    <a href="/explore" class="btn btn-primary">Explore Bird Species</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <h2>Contribute to Science</h2>
+                    <p>Your contributions are pivotal in advancing both scientific research and bird conservation initiatives. Researchers can use the extensive dataset we're curating as a community to delve into the intricate nuances of bird populations, aiding in their preservation and fostering a deeper understanding of avian ecosystems. By becoming an active participant, you are joining a collective effort to make a meaningful and lasting impact on the field of ornithology, contributing to the knowledge and protection of our feathered friends. Your involvement truly matters in the quest for a brighter future for birds and their habitats.</p>
+                    <a href="/science" class="btn btn-primary">Learn More</a>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='img/research.jpg')}}" alt="Scientific Research" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light py-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <h2>Join a Birding Community</h2>
+                    <p>Connect with fellow bird enthusiasts, share your birding stories, and participate in community events and birdwatching excursions. Join any of these vibrant birding communities which welcomes members of all experience levels.</p>
+                    <a href="/community" class="btn btn-primary">List of the Communities</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <h2>Support Bird Conservation</h2>
+                    <p>Make a difference in bird conservation by donating to our initiatives. Your contributions fund vital research, habitat preservation, and education programs that benefit birds and their ecosystems.</p>
+                    <a href="/donate" class="btn btn-primary">Donate Now</a>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='img/conservation.jpg')}}" alt="Conservation" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
