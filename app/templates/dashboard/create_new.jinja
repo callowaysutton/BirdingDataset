@@ -1,0 +1,110 @@
+{% extends "/base.jinja" %}
+{% block content %}
+
+<script>document.title = "Create New Link";</script>
+
+<main id="main-content" class="rvt-layout__wrapper rvt-layout__wrapper--details">
+
+    <!-- **********************************************************************
+        Sidebar
+    *********************************************************************** -->
+    
+    <div class="rvt-layout__sidebar [ rvt-p-top-xxl rvt-p-left-md rvt-bg-black-000 ]" id="section-nav">
+
+        <!-- **********************************************************************
+            Sidenav
+        *********************************************************************** -->
+        
+        <nav class="rvt-sidenav" aria-labelledby="details-pages" data-rvt-sidenav>
+            <span class="rvt-sidenav__label" id="details-pages">Dashboard</span>
+            <ul class="rvt-sidenav__list">
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('dashboard') }}" class="rvt-sidenav__link">List links</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('create_new') }}" class="rvt-sidenav__link"  aria-current="page">Create new link</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('link_analytics') }}" class="rvt-sidenav__link">View analytics</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('export_link_data') }}" class="rvt-sidenav__link">Export data</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="rvt-layout__content [ rvt-p-top-xxl rvt-p-lr-md rvt-p-lr-xxl-md-up ]">
+        <div class="rvt-prose">
+
+            <!-- **************************************************************
+                Page title
+            *************************************************************** -->
+
+        </div>
+
+        
+        
+        <!-- ******************************************************************
+            Content sections
+        ******************************************************************* -->
+
+        <div class="rvt-container-lg rvt-m-top-xl rvt-m-left-none rvt-m-right-none rvt-p-right-none rvt-p-left-none">
+            <div class="rvt-row">
+                <div class="rvt-cols-8-lg">
+
+                <div class="rvt-flex-md-up rvt-items-center rvt-p-bottom-xs rvt-p-lr-xxs rvt-border-bottom">
+                            
+                            <!-- **********************************************
+                                Header title
+                            *********************************************** -->
+                            
+                            <h2 class="rvt-grow-1 rvt-ts-18 rvt-text-regular">Create Link</h2>
+
+                            <!-- **********************************************
+                                Right-aligned action link
+                            *********************************************** -->
+
+                            <a href="{{ url_for('dashboard') }}" class="rvt-flex rvt-items-center rvt-link-plain rvt-m-top-sm rvt-m-top-none-md-up">
+                                <svg class="rvt-color-blue-300" fill="currentColor" width="16" height="16" viewBox="0 0 16 16"><path d="M9 7v5H7V7h2ZM8 4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6a6 6 0 1 0 0 12A6 6 0 0 0 8 2Z"></path></svg>
+                                <span class="rvt-ts-14 rvt-m-left-xs">Manage Links</span>
+                            </a>
+                        </div>
+
+                        <!-- **************************************************
+                            Section #1 content
+                        *************************************************** -->
+
+                        <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        <!-- **************************************************
+                            Grouped set of fields
+                        *************************************************** -->
+
+                        <fieldset class="rvt-fieldset">
+                            </legend>
+                            <div class="rvt-m-top-sm">
+                                {{ form.username.label(class="rvt-label") }}
+                                {{ form.username(class="rvt-input") }}
+                            </div>
+
+                            <div class="rvt-m-top-sm">
+                                {{ form.password.label(class="rvt-label") }}
+                                {{ form.password(class="rvt-input") }}
+                            </div>
+                        </fieldset>
+
+                        <!-- **************************************************
+                            Create/edit form buttons
+                        *************************************************** -->
+                        
+                        <div class="rvt-button-group [ rvt-m-top-xl ]">
+                            {{ form.submit(class="rvt-button") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

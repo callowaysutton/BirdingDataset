@@ -1,0 +1,110 @@
+{% extends "base.jinja" %}
+{% block content %}
+
+<!-- **************************************************************************
+    Main content area
+*************************************************************************** -->
+
+<main id="main-content" class="rvt-layout__wrapper">
+
+    <!-- **********************************************************************
+        Hero
+    *********************************************************************** -->
+
+    <div class="rvt-hero">
+        <div class="rvt-container-lg">
+            <div class="rvt-hero__inner">
+                <div class="rvt-hero__body [ rvt-flow ]">
+                    <h1 class="rvt-hero__title">Built by IU students for IU students</h1>
+                    <div class="rvt-hero__teaser">
+                        <p>Need a simple and functional tool to shrink those URLs and save you some precious characters? It might not be the fanciest thing out there, but it's made with love. Hope you find it handy, and if you have any suggestions or feedback, feel free to drop a line on the Github!</p>
+                    </div>
+                    <div class="rvt-hero__actions">
+                        <a class="rvt-cta rvt-cta--button" href="{{ url_for('register') }}">Register now</a>
+                    </div>
+                </div>
+                <div class="rvt-hero__media">
+                    <img src="https://www.cloudways.com/blog/wp-content/uploads/A-Complete-Guide-to-Affiliate-Link-Cloaking-Banner.jpg" alt="Person wearing a mortarboard and graduation gown against a crimson background">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- **********************************************************************
+        Stats
+    *********************************************************************** -->
+
+
+    <div class="rvt-border-bo">
+        <div class="rvt-container-lg rvt-p-top-xxl">
+            <div class="rvt-stat-group">
+
+                <!-- ******************************************************
+                    Stat
+                ******************************************************* -->
+                
+                <a href="#0" class="rvt-stat">
+                    <div class="rvt-stat__content [ rvt-flow ]">
+                        <div class="rvt-stat__number">{{ total_visits }}</div>
+                        <div class="rvt-stat__description">Total visits</div>
+                    </div>
+                </a>
+
+                <!-- ******************************************************
+                    Stat
+                ******************************************************* -->
+
+                <a href="#0" class="rvt-stat">
+                    <div class="rvt-stat__content [ rvt-flow ]">
+                        <div class="rvt-stat__number">{{ visits_day }}</div>
+                        <div class="rvt-stat__description">Visits in the past 24 hours</div>
+                    </div>
+                </a>
+
+                <!-- ******************************************************
+                    Stat
+                ******************************************************* -->
+
+                <a href="#0" class="rvt-stat">
+                    <div class="rvt-stat__content [ rvt-flow ]">
+                        <div class="rvt-stat__number">{{ total_links }}</div>
+                        <div class="rvt-stat__description">Total Links</div>
+                    </div>
+                </a>
+
+                <!-- ******************************************************
+                    Stat
+                ******************************************************* -->
+
+                <a href="#0" class="rvt-stat">
+                    <div class="rvt-stat__content [ rvt-flow ]">
+                        <div class="rvt-stat__number">{{ user_count }}</div>
+                        <div class="rvt-stat__description">Total Users</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- **********************************************************************
+        Quote
+
+        -> rivet.iu.edu/components/quote/
+    *********************************************************************** -->
+
+    <div class="rvt-p-tb-xxl rvt-p-top-3-xl-md-up rvt-p-bottom-4-xl-md-up">
+        <div class="rvt-container-lg">
+            <div class="rvt-quote [ rvt-flow ]">
+                <blockquote class="rvt-quote__text">
+                    <p>In the realm of software engineering, the trinity of practice, an insatiable thirst for learning, and an unyielding commitment to reading is the ultimate recipe for success. Like a symphony, they harmonize to create software virtuosos who compose elegant solutions to complex problems.</p>
+                </blockquote>              
+                <p class="rvt-quote__citation">
+                    <span class="rvt-quote__title">Calloway Sutton</span>
+                    <span class="rvt-quote__subtitle">Software Engineer</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+</main>
+{% endblock %}

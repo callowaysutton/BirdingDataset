@@ -1,0 +1,85 @@
+{% extends "base.jinja" %}
+{% block content %}
+<main id="main-content" class="rvt-layout__wrapper rvt-container-sm">
+    <div class="rvt-layout__content">
+        <!-- ******************************************************************
+            Headshot, name, and title
+        ******************************************************************* -->
+        
+        <div class="rvt-flex-md-up rvt-items-center-md-up rvt-m-top-xxl rvt-m-top-md-md-up">
+            
+            <!-- **************************************************************
+                Headshot
+            *************************************************************** -->
+            
+            <div class=" rvt-avatar--xl rvt-m-right-lg-md-up">
+                <img class="rvt-avatar__image" src="{{ user.profile_picture }}" alt="">
+            </div>
+
+            <!-- **************************************************************
+                Name and title
+            *************************************************************** -->
+
+            <div class="rvt-prose rvt-flow">
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+                <!-- <p>{{ user.username }}</p> -->
+                <p class="rvt-ts-20 rvt-color-black-500">{{ user.organization }}</p>
+            </div>
+        </div>
+
+        <div class="rvt-flex-md-up rvt-items-center rvt-p-bottom-xs rvt-p-lr-xxs">
+                            
+        <!-- **********************************************
+            Header title
+        *********************************************** -->
+        
+        <h2 class="rvt-grow-1 rvt-ts-18 rvt-text-regular">{{ user.username }}</h2>
+
+        <!-- **********************************************
+            Right-aligned action link
+        *********************************************** -->
+
+        <a href="#0" class="rvt-flex rvt-items-center rvt-link-plain rvt-m-top-sm rvt-m-top-none-md-up">
+            <svg class="rvt-color-blue-300" fill="currentColor" width="16" height="16" viewBox="0 0 16 16"><path d="M9 7v5H7V7h2ZM8 4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6a6 6 0 1 0 0 12A6 6 0 0 0 8 2Z"></path></svg>
+            <span class="rvt-ts-14 rvt-m-left-xs">Edit Profile</span>
+        </a>
+    </div>
+        <div class="rvt-prose rvt-flow rvt-border-top rvt-p-top-lg rvt-m-top-xl">
+
+            <!-- **************************************************************
+                Contact information card
+            *************************************************************** -->
+            
+            <div class="rvt-layout__feature-slot">
+                <div class="rvt-card rvt-card--raised">
+                    <div class="rvt-card__body">
+                        <dl class="rvt-list-description rvt-m-all-none">
+                            <dt>Phone:</dt>
+                            <dd>{{ user.phone }}</dd>
+                            <dt>Email:</dt>
+                            <dd><a href="#0">{{ user.email }}</a></dd>
+                            <dt>Location:</dt>
+                            <dd>{{ user.location }}</dd>
+                            <dt>Website:</dt>
+                            <dd><a href="#0">{{ user.website}}</a></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            <!-- **************************************************************
+                Biography
+            *************************************************************** -->
+
+            <h2>Interests</h2>
+            <ul>
+                {% for interest in user.interests.split(";") %}
+                <li>{{ interest }}</li>
+                {% endfor %}
+            </ul>
+            <h2>About</h2>
+            <p>{{ user.bio }}</p>
+        </div>
+    </div>
+</main>
+{% endblock %}

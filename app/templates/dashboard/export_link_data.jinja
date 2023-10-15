@@ -1,0 +1,87 @@
+{% extends "/base.jinja" %}
+{% block content %}
+
+<script>document.title = "Export Data";</script>
+
+<main id="main-content" class="rvt-layout__wrapper rvt-layout__wrapper--details">
+
+    <!-- **********************************************************************
+        Sidebar
+    *********************************************************************** -->
+    
+    <div class="rvt-layout__sidebar [ rvt-p-top-xxl rvt-p-left-md rvt-bg-black-000 ]" id="section-nav">
+
+        <!-- **********************************************************************
+            Sidenav
+        *********************************************************************** -->
+        
+        <nav class="rvt-sidenav" aria-labelledby="details-pages" data-rvt-sidenav>
+            <span class="rvt-sidenav__label" id="details-pages">Dashboard</span>
+            <ul class="rvt-sidenav__list">
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('dashboard') }}" class="rvt-sidenav__link">List links</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('create_new') }}" class="rvt-sidenav__link">Create new link</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('link_analytics') }}" class="rvt-sidenav__link">View analytics</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('export_link_data') }}" class="rvt-sidenav__link" aria-current="page">Export data</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="rvt-layout__content [ rvt-p-top-xxl rvt-p-lr-md rvt-p-lr-xxl-md-up ]">
+        
+        <!-- ******************************************************************
+            Content sections
+        ******************************************************************* -->
+
+        <div class="rvt-container-lg rvt-m-top-xl rvt-m-left-none rvt-m-right-none rvt-p-right-none rvt-p-left-none">
+            <div class="rvt-row">
+                <div class="rvt-cols-8-lg">
+                    <div class="rvt-prose rvt-flow">
+
+                        <!-- **************************************************
+                            Section #2 header
+                        *************************************************** -->
+
+                        <div class="rvt-flex-md-up rvt-items-center rvt-p-bottom-xs rvt-p-lr-xxs rvt-border-bottom">
+                        <h2 class="rvt-grow-1 rvt-ts-18 rvt-text-regular">Export Data</h2>
+                    </div>
+
+                        <!-- **************************************************
+                            Section #2 content
+                        *************************************************** -->
+
+                        <div class="rvt-row rvt-row--loose">
+                            <div class="rvt-cols-6-md">
+                                <dl class="rvt-list-description rvt-m-top-lg">
+                                    <dt>
+                                        <svg fill="currentColor" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM0 13a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v3H0v-3Z"></path><path d="M8.873 7.003a4 4 0 0 1-1.278 2.041A4 4 0 0 1 11 13h5v-3a3 3 0 0 0-3-3H9c-.042 0-.085 0-.127.003ZM5 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"></path></svg>
+                                        <span class="rvt-m-left-xxs">Users</span>
+                                    </dt>
+                                    <dd>Norval Ashton</dd>
+                                    <dd>Alisha Mercedes</dd>
+                                    <dd>Adam Jana</dd>
+                                </dl>
+                            </div>
+                            <div class="rvt-cols-6-md">
+                                <dl class="rvt-list-description rvt-m-top-lg">
+                                    <dt>
+                                        <svg fill="currentColor" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM0 13a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v3H0v-3Z"></path><path d="M8.873 7.003a4 4 0 0 1-1.278 2.041A4 4 0 0 1 11 13h5v-3a3 3 0 0 0-3-3H9c-.042 0-.085 0-.127.003ZM5 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"></path></svg>
+                                        <span class="rvt-m-left-xxs">Administrators</span>
+                                    </dt>
+                                    <dd>Kendall Cristal</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

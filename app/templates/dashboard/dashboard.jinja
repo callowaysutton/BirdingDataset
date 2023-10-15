@@ -1,0 +1,68 @@
+{% extends "/base.jinja" %}
+{% block content %}
+
+<script>document.title = "Dashboard";</script>
+
+<main id="main-content" class="rvt-layout__wrapper rvt-layout__wrapper--details">
+
+    <!-- **********************************************************************
+        Sidebar
+    *********************************************************************** -->
+    
+    <div class="rvt-layout__sidebar [ rvt-p-top-xxl rvt-p-left-md rvt-bg-black-000 ]" id="section-nav">
+
+        <!-- **********************************************************************
+            Sidenav
+        *********************************************************************** -->
+        
+        <nav class="rvt-sidenav" aria-labelledby="details-pages" data-rvt-sidenav>
+            <span class="rvt-sidenav__label" id="details-pages">Dashboard</span>
+            <ul class="rvt-sidenav__list">
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('dashboard') }}" class="rvt-sidenav__link" aria-current="page">List links</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('create_new') }}" class="rvt-sidenav__link">Create new link</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('link_analytics') }}" class="rvt-sidenav__link">View analytics</a>
+                </li>
+                <li class="rvt-sidenav__item">
+                    <a href="{{ url_for('export_link_data') }}" class="rvt-sidenav__link">Export data</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="rvt-layout__content [ rvt-p-top-xxl rvt-p-lr-md rvt-p-lr-xxl-md-up ]">
+
+        
+        <!-- ******************************************************************
+            Content sections
+        ******************************************************************* -->
+
+        <div class="rvt-container-lg rvt-m-top-xl rvt-m-left-none rvt-m-right-none rvt-p-right-none rvt-p-left-none">
+            <div class="rvt-row">
+                <div class="rvt-cols-8-lg">
+                    <div class="rvt-prose rvt-flow">
+                    <div class="rvt-flex-md-up rvt-items-center rvt-p-bottom-xs rvt-p-lr-xxs rvt-border-bottom">
+                        <h2 class="rvt-grow-1 rvt-ts-18 rvt-text-regular">Links</h2>
+                    </div>
+
+                        <div class="rvt-empty-state [ rvt-m-top-lg ]">
+                            <div class="rvt-empty-state__content [ rvt-flow ]">
+                                <div class="rvt-p-all-md rvt-bg-black-100 rvt-inline-flex rvt-border-radius-circle">
+                                    <svg fill="currentColor" width="16" height="16" viewBox="0 0 16 16"><path d="M10 14h5.5v-2h-1.382l-.366-.733a2.86 2.86 0 0 1-.298-1.12l-.234-4.209A5.23 5.23 0 0 0 9 1.096V0H7v1.096a5.23 5.23 0 0 0-4.22 4.842l-.234 4.209a2.86 2.86 0 0 1-.298 1.12L1.882 12H.5v2H6a2 2 0 1 0 4 0Zm1.886-2H4.114a4.86 4.86 0 0 0 .429-1.742l.234-4.209a3.228 3.228 0 0 1 6.446 0l.234 4.209A4.86 4.86 0 0 0 11.886 12Z"></path></svg>
+                                </div>
+                                <p>You haven't made any links! Would you like to create one now?</p>
+                            </div>
+                            <div class="rvt-empty-state__actions">
+                                <a href="{{ url_for('create_new') }}"><button class="rvt-button" type="button">Create a Link</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
