@@ -1,85 +1,53 @@
 {% extends "base.html" %}
+
 {% block content %}
-<main id="main-content" class="rvt-layout__wrapper rvt-container-sm">
-    <div class="rvt-layout__content">
-        <!-- ******************************************************************
-            Headshot, name, and title
-        ******************************************************************* -->
-        
-        <div class="rvt-flex-md-up rvt-items-center-md-up rvt-m-top-xxl rvt-m-top-md-md-up">
-            
-            <!-- **************************************************************
-                Headshot
-            *************************************************************** -->
-            
-            <div class=" rvt-avatar--xl rvt-m-right-lg-md-up">
-                <img class="rvt-avatar__image" src="{{ user.profile_picture }}" alt="">
-            </div>
-
-            <!-- **************************************************************
-                Name and title
-            *************************************************************** -->
-
-            <div class="rvt-prose rvt-flow">
-                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-                <!-- <p>{{ user.username }}</p> -->
-                <p class="rvt-ts-20 rvt-color-black-500">{{ user.organization }}</p>
-            </div>
-        </div>
-
-        <div class="rvt-flex-md-up rvt-items-center rvt-p-bottom-xs rvt-p-lr-xxs">
-                            
-        <!-- **********************************************
-            Header title
-        *********************************************** -->
-        
-        <h2 class="rvt-grow-1 rvt-ts-18 rvt-text-regular">{{ user.username }}</h2>
-
-        <!-- **********************************************
-            Right-aligned action link
-        *********************************************** -->
-
-        <a href="#0" class="rvt-flex rvt-items-center rvt-link-plain rvt-m-top-sm rvt-m-top-none-md-up">
-            <svg class="rvt-color-blue-300" fill="currentColor" width="16" height="16" viewBox="0 0 16 16"><path d="M9 7v5H7V7h2ZM8 4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6a6 6 0 1 0 0 12A6 6 0 0 0 8 2Z"></path></svg>
-            <span class="rvt-ts-14 rvt-m-left-xs">Edit Profile</span>
-        </a>
-    </div>
-        <div class="rvt-prose rvt-flow rvt-border-top rvt-p-top-lg rvt-m-top-xl">
-
-            <!-- **************************************************************
-                Contact information card
-            *************************************************************** -->
-            
-            <div class="rvt-layout__feature-slot">
-                <div class="rvt-card rvt-card--raised">
-                    <div class="rvt-card__body">
-                        <dl class="rvt-list-description rvt-m-all-none">
-                            <dt>Phone:</dt>
-                            <dd>{{ user.phone }}</dd>
-                            <dt>Email:</dt>
-                            <dd><a href="#0">{{ user.email }}</a></dd>
-                            <dt>Location:</dt>
-                            <dd>{{ user.location }}</dd>
-                            <dt>Website:</dt>
-                            <dd><a href="#0">{{ user.website}}</a></dd>
-                        </dl>
-                    </div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="{{ user.profile_picture }}" alt="Profile Picture" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.username }}</h5>
+                    <p class="card-text">{{ user.first_name }} {{ user.last_name }}</p>
                 </div>
             </div>
-
-            <!-- **************************************************************
-                Biography
-            *************************************************************** -->
-
-            <h2>Interests</h2>
-            <ul>
-                {% for interest in user.interests.split(";") %}
-                <li>{{ interest }}</li>
-                {% endfor %}
-            </ul>
-            <h2>About</h2>
-            <p>{{ user.bio }}</p>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Information</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+                        <li class="list-group-item"><strong>Organization:</strong> {{ user.organization }}</li>
+                        <li class="list-group-item"><strong>Location:</strong> {{ user.location }}</li>
+                        <li class="list-group-item"><strong>Phone:</strong> {{ user.phone }}</li>
+                        <li class="list-group-item"><strong>Website:</strong> <a href="{{ user.website }}" target="_blank">{{ user.website }}</a></li>
+                        <li class="list-group-item"><strong>Interests:</strong> {{ user.interests }}</li>
+                        <li class="list-group-item"><strong>Bio:</strong> {{ user.bio }}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Birds Submitted</h5>
+                    <ul class="list-group">
+                        {% for submission in user.birds %}
+                            <li class="list-group-item">{{ submission.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Validations Done</h5>
+                    <ul class="list-group">
+                        {% for vote in votes %}
+                            <li class="list-group-item">{{ birds[vote.bird_id-1].name }}: {{ vote.description }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-</main>
+</div>
 {% endblock %}

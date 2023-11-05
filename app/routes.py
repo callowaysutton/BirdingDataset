@@ -1,14 +1,14 @@
 from flask import render_template, url_for, flash, redirect, session, request
 from flask_login import login_user, current_user, login_required, logout_user
 from flask_paginate import Pagination, get_page_args
-from app import app, db
+from app import app, db, save_picture_minio
 from app.models import User, Link, Bird, BirdVote
 from app.forms import RegistrationForm, LoginForm, LinkForm, BirdUploadForm, BirdValidationForm
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from libgravatar import Gravatar
 from sqlalchemy import func
-import subprocess
-import random
+import random, os, subprocess, tempfile, shutil
 
 # Get the current version
 git_command = ["git", "rev-parse", "--short", "HEAD"]
@@ -78,14 +78,8 @@ def register():
             password=hashed_password,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-            # organization=form.organization.data,
             profile_picture=Gravatar(form.email.data).get_image(),
-            # phone_number=form.phone_number.data,
             email=form.email.data,
-            # location=form.location.data,
-            # website=form.website.data,
-            # interests=form.interests.data,
-            # bio=form.bio.data
         )
         
 
@@ -137,30 +131,74 @@ def login():
     )
 
 
-@app.route('/upload', methods=['GET', 'POST'])
-@login_required  # Make sure the user is logged in to access this page
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+@app.route('/upload', methods=['GET','POST'])
+@login_required
 def upload_bird():
     form = BirdUploadForm()
     if form.validate_on_submit():
-        if form.picture.data:
-            # picture_url = save_picture(form.picture.data)
-            picture_url = ''  # Set a default image URL if no image is uploaded
-            print("Saved picture!")
-        else:
-            picture_url = ''  # Set a default image URL if no image is uploaded
+        if 'picture' not in request.files:
+            flash('No file part', 'error')
+            return redirect(request.url)
 
-        bird = Bird(name=form.name.data,
-                    description=form.description.data,
-                    picture_reference=picture_url,
-                    latitude=form.latitude.data,
-                    longitude=form.longitude.data,
-                    user=current_user)
+        picture_data = request.files['picture']
 
-        db.session.add(bird)
-        db.session.commit()
+        # Check if the file is empty
+        if picture_data.filename == '':
+            flash('No selected file', 'error')
+            return redirect(request.url)
 
-        flash('Your bird has been uploaded!', 'success')
-        return redirect(url_for('home'))  # Redirect to the home page or a success page
+        # Ensure it's a supported file type (e.g., image)
+        allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+        if not allowed_file(picture_data.filename, allowed_extensions):
+            flash('Invalid file type. Supported formats are PNG, JPG, JPEG, and GIF.', 'error')
+            return redirect(request.url)
+
+        # Create a temporary directory to store the file
+        temp_dir = tempfile.mkdtemp()
+        temp_path = os.path.join(temp_dir, secure_filename(picture_data.filename))
+
+        try:
+            # Save the file to the temporary location
+            picture_data.save(temp_path)
+
+            # Now, you can inspect the file size
+            content_length = os.path.getsize(temp_path)
+            print(f"Content Length: {content_length} bytes")
+
+            # Upload the file to Minio and get the public URL
+            picture_url = save_picture_minio(temp_path)
+
+            # Check if the picture_url is None (indicating an upload error)
+            if picture_url is None:
+                flash('Failed to upload the picture', 'error')
+                return redirect(request.url)
+
+            # The file is successfully uploaded, you can use the picture_url
+            bird = Bird(name=request.form['name'],
+                        description=request.form['description'],
+                        picture_reference=picture_url,
+                        latitude=float(request.form['latitude']),
+                        longitude=float(request.form['longitude']),
+                        user=current_user)
+
+            db.session.add(bird)
+            db.session.commit()
+
+            flash('Your bird has been uploaded!', 'success')
+            return redirect(url_for('home'))
+        
+        except Exception as err:
+            print(f"Minio error: {err}")
+
+        finally:
+            # Delete the temporary directory and its contents
+            shutil.rmtree(temp_dir, ignore_errors=True)
+
+            flash('Your bird has been uploaded!', 'success')
+            return redirect(url_for('home'))  # Redirect to the home page or a success page
 
     return render_template('upload.html', form=form, user=current_user, version=version)
 
@@ -199,6 +237,12 @@ def validate_bird():
 
     # Fetch a randomly selected bird for validation and store its ID in the session
     bird_to_validate = random.choice(Bird.query.all())
+    tries = 0
+    while bird_to_validate == session['bird_to_validate_id']:
+        # if tries > 3:
+        #     break
+        bird_to_validate = random.choice(Bird.query.all())
+        # tries += 1
     session['bird_to_validate_id'] = bird_to_validate.id
 
     return render_template('validate.html', form=form, bird_to_validate=bird_to_validate, user=current_user, version=version)
@@ -268,4 +312,4 @@ def export_link_data():
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", user=current_user, version=version)
+    return render_template("profile.html", user=current_user, birds=Bird.query.all(), votes=BirdVote.query.all(), version=version)

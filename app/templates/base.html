@@ -60,35 +60,35 @@
     
     <main class="flex-grow-1">
         {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="toast-container position-fixed top-0 end-0 p-3">
-                        {% for message in messages %}
-                            <div class="toast show fade" role="alert" data-autohide="true" data-delay="1000">
-                                <div class="toast-header">
-                                    <strong class="mr-auto text-success">{{ message[0] }}</strong>
-                                </div>
-                                <div class="toast-body">
-                                    {{ message[1] }}
-                                </div>
-                            </div>
-                        {% endfor %}
+        {% if messages %}
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                {% for message in messages %}
+                    <div class="toast show fade" role="alert" data-autohide="true" data-delay="1000">
+                        <div class="toast-header">
+                            <strong class="mr-auto text-success">{{ message[0] }}</strong>
+                        </div>
+                        <div class="toast-body">
+                            {{ message[1] }}
+                        </div>
                     </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            var toasts = document.querySelectorAll('.toast');
-                            toasts.forEach(function (toast) {
-                                var toastInstance = new bootstrap.Toast(toast);
-                                toastInstance.show();
-
-                                // Add an event listener for the toast hidden event
-                                toast.addEventListener('hidden.bs.toast', function () {
-                                    toast.remove(); // Remove the toast element once it's hidden
-                                });
-                            });
+                {% endfor %}
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var toasts = document.querySelectorAll('.toast');
+                    toasts.forEach(function (toast) {
+                        var toastInstance = new bootstrap.Toast(toast);
+                        toastInstance.show();
+    
+                        // Add an event listener for the toast hidden event
+                        toast.addEventListener('hidden.bs.toast', function () {
+                            toast.remove(); // Remove the toast element once it's hidden
                         });
-                    </script>
-                {% endif %}
-            {% endwith %}
+                    });
+                });
+            </script>
+        {% endif %}
+    {% endwith %}    
         {% block content %}{% endblock %}
     </main>
 

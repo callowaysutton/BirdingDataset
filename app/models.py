@@ -7,6 +7,7 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
+    role = db.Column(db.String(50), unique=False, nullable=False, default="user")
     password = db.Column(db.String(100), nullable=False)
     first_name = db.Column(db.String(20), unique=False, nullable=True)
     last_name = db.Column(db.String(20), unique=False, nullable=True)
@@ -37,9 +38,8 @@ class Bird(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, unique=False, nullable=False)
-    picture_reference = db.Column(db.Text, unique=False, nullable=False)
+    picture_reference = db.Column(db.Text, unique=True, nullable=False)
     description = db.Column(db.Integer())
-    # Geolocation data
     latitude = db.Column(db.Float(), unique=False, nullable=False)
     longitude = db.Column(db.Float(), unique=False, nullable=False)
     
@@ -62,9 +62,6 @@ class BirdVote(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     
-    # Implement a unique constraint on bird_id and user_id
-    # to prevent duplicate votes
-    
     # Bird ID which relates back to the original bird
     bird_id = db.Column(db.Integer, db.ForeignKey('bird.id'), nullable=False)
     # User ID which relates back to the voting user
@@ -76,7 +73,7 @@ class BirdVote(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"BirdVote('{self.bird_id}', '{self.vote}')"
+        return f"BirdVote('{self.bird_id}', '{self.description}')"
 
     def get_id(self):
         return str(self.id)

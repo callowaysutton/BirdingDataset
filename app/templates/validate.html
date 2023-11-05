@@ -1,36 +1,110 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form method="POST">
-                {{ form.hidden_tag() }}
-                <fieldset class="border rounded p-4">
-                    <legend class="border-bottom pb-2 mb-4">
-                        <h1 class="mb-0">Validate a Bird</h1>
-                    </legend>
-                    <div class="mb-3">
-                        <label class="form-label">Bird Name</label>
-                        <input type="text" class="form-control" value="{{ bird_to_validate.name }}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" rows="3" readonly>{{ bird_to_validate.description }}</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Rating (1-10)</label>
-                        {{ form.rating(class="form-control") }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        {{ form.description(class="form-control") }}
-                    </div>
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        <fieldset class="border rounded p-4">
+          <legend class="border-bottom pb-2 mb-4">
+            <h1 class="mb-0">Validate a Submission</h1>
+          </legend>
+
+          <div class="row">
+            <!-- Left Column -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Bird Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  value="{{ bird_to_validate.name }}"
+                  readonly
+                />
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <div class="mb-3">
+                    <label class="form-label">Location</label>
+                    <div id="map" style="height: 150px"></div>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="latitude"
+                    name="latitude"
+                    value="{{ bird_to_validate.latitude }}"
+                    readonly
+                    hidden
+                  />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="longitude"
+                    name="longitude"
+                    value="{{ bird_to_validate.longitude }}"
+                    readonly
+                    hidden
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" rows="3" readonly>
+{{ bird_to_validate.description }}</textarea
+                >
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-6">
+              <img
+                src="{{ bird_to_validate.picture_reference }}"
+                alt="Bird Image"
+                class="img-fluid"
+              />
+            </div>
+          </div>
+
+         <h3 class="mb-0">Vote on the Submission</h3>
+         <hr />
+
+          <div class="row mt-4">
+            <div class="mb-3">
+              <label class="form-label">Rating (1-10)</label>
+              {{ form.rating(class="form-control") }}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Your Description of the Photo</label>
+              {{ form.description(class="form-control") }}
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
     </div>
+  </div>
 </div>
+
+<!-- Include Leaflet JS and CSS for map -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Include any other necessary Leaflet plugins or scripts here -->
+<script>
+  var map = L.map('map', { dragging: false, zoomControl: false }).setView([{{ bird_to_validate.latitude }}, {{ bird_to_validate.longitude }}], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Add a marker layer (readonly) for user interaction
+  L.marker([{{ bird_to_validate.latitude }}, {{ bird_to_validate.longitude }}], { draggable: false }).addTo(map);
+</script>
 {% endblock %}
