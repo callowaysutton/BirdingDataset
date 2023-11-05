@@ -121,7 +121,7 @@ tqdm==4.66.1
 transformers @ git+https://github.com/huggingface/transformers.git@fb7d246951d5f60aa36a7958841dfea72f51fc6b
 typing_extensions @ file:///private/tmp/python-typing-extensions-20230702-5533-jv3t41/typing_extensions-4.7.1/dist/typing_extensions-4.7.1-py3-none-any.whl
 ujson==5.8.0
-urllib3==1.26.16
+urllib3==1.26.18
 uvicorn==0.23.2
 uvloop==0.17.0
 visitor==0.1.3
